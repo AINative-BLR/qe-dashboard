@@ -1,492 +1,738 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>QE with AI · Training Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bangalore Initiative — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
-  --bg:#07090F;
-  --s0:#0C1220;--s1:#111A2C;--s2:#1A2840;--s3:#243352;
-  --gold:#C8A030;--gold2:#E8C060;--gold3:#F5DFA0;
-  --teal:#2A8A9A;--teal2:#3ABACF;
-  --green:#2A8A5A;--green2:#3ACA80;
-  --amber:#C07A10;--amber2:#F0A020;
-  --text:#D8E4EE;--tm:#7A94AA;--td:#3A5060;
-  --W:#FFFFFF;
+  --bg:#06080E;--s0:#0B1018;--s1:#101820;--s2:#182030;--s3:#20304A;
+  --gold:#C8A040;--gold2:#E0B850;--gold3:#F0D898;
+  --teal:#38A8C8;--teal2:#58C8E8;
+  --green:#30A060;--green2:#48C880;
+  --amber:#D08018;--amber2:#F0A030;
+  --red:#C03838;--red2:#E05050;
+  --purple:#7860C8;--purple2:#9880E8;
+  --text:#CCD8E8;--tm:#6080A0;--td:#304050;
+  --W:#FFF;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh}
-
-/* ── HEADER ── */
-header{
-  background:linear-gradient(180deg,var(--s0) 0%,var(--bg) 100%);
-  border-bottom:1px solid var(--s2);
-  padding:0 32px;
-  display:flex;align-items:center;justify-content:space-between;
-  height:64px;position:sticky;top:0;z-index:100;
-}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;min-height:100vh}
+/* HEADER */
+header{background:var(--s0);border-bottom:1px solid var(--s2);padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
 .brand{display:flex;align-items:center;gap:14px}
-.brand-bar{width:3px;height:36px;background:var(--gold);border-radius:2px}
-.brand-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--gold2);letter-spacing:.02em}
-.brand-sub{font-size:11px;color:var(--tm);margin-top:1px;letter-spacing:.04em}
-.header-right{display:flex;align-items:center;gap:20px}
-.gen-time{font-size:11px;color:var(--td)}
-.live-badge{display:flex;align-items:center;gap:6px;background:var(--s1);border:1px solid var(--s2);
-  border-radius:20px;padding:5px 14px;font-size:11px;color:var(--tm);font-family:'DM Sans',sans-serif}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green2);animation:pulse 1.8s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
-.print-btn{background:none;border:1px solid var(--s2);color:var(--tm);padding:6px 14px;
-  border-radius:4px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all .15s}
-.print-btn:hover{background:var(--s1);color:var(--text)}
-
-/* ── MAIN ── */
-main{padding:28px 32px 48px}
-
-/* ── KPI ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
-.kpi{background:var(--s0);border:1px solid var(--s2);border-radius:8px;padding:16px 18px;
-  position:relative;overflow:hidden;cursor:default}
-.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
-.kpi.t::after{background:var(--teal)}
-.kpi.g::after{background:var(--green)}
-.kpi.a::after{background:var(--amber2)}
-.kpi-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--tm);text-transform:uppercase;margin-bottom:10px}
-.kpi-val{font-family:'Syne',sans-serif;font-size:34px;font-weight:700;color:var(--gold2);line-height:1}
-.kpi.t .kpi-val{color:var(--teal2)}
-.kpi.g .kpi-val{color:var(--green2)}
-.kpi.a .kpi-val{color:var(--amber2)}
-.kpi-sub{font-size:11px;color:var(--td);margin-top:6px}
-
-/* ── SECTION LABEL ── */
-.sec-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--td);text-transform:uppercase;margin-bottom:12px}
-
-/* ── CARDS ── */
-.card{background:var(--s0);border:1px solid var(--s2);border-radius:8px;padding:20px}
-.card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--text);
-  letter-spacing:.03em;margin-bottom:16px}
-
-/* ── GRID LAYOUTS ── */
-.grid-2{display:grid;grid-template-columns:3fr 2fr;gap:12px;margin-bottom:16px}
-.grid-2b{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.grid-mentor{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px}
-
-/* ── MENTOR CARD ── */
-.mc{background:var(--s0);border:1px solid var(--s2);border-radius:8px;padding:14px}
-.mc-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mc-meta{font-size:10px;color:var(--td);margin-bottom:10px}
-.mc-pct{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;margin-bottom:6px}
-.mc-bar-bg{height:4px;background:var(--s2);border-radius:2px;overflow:hidden;margin-bottom:6px}
-.mc-bar-fill{height:100%;border-radius:2px;transition:width .8s}
-.mc-status{font-size:10px;color:var(--td)}
-
-/* ── TABLE ── */
-.tbl-card{background:var(--s0);border:1px solid var(--s2);border-radius:8px;overflow:hidden;margin-bottom:16px}
-.tbl-top{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--s2);flex-wrap:wrap;gap:10px}
-.tbl-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--text)}
-.ctrls{display:flex;gap:8px;flex-wrap:wrap}
+.bbar{width:3px;height:36px;background:linear-gradient(180deg,var(--gold),var(--teal));border-radius:2px}
+.btitle{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;
+  background:linear-gradient(90deg,var(--gold2),var(--teal2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.bsub{font-size:10px;color:var(--td);letter-spacing:.06em;margin-top:1px}
+.hright{display:flex;align-items:center;gap:16px}
+.live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--tm)}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--green2);animation:blink 1.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hbtn{background:none;border:1px solid var(--s3);color:var(--tm);padding:5px 14px;
+  border-radius:4px;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;transition:.15s}
+.hbtn:hover{background:var(--s1);color:var(--text)}
+/* MAIN */
+main{padding:22px 28px 60px}
+/* OVERVIEW STRIP */
+.strip{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:22px}
+.ov{background:var(--s0);border:1px solid var(--s2);border-radius:6px;padding:11px 14px;
+  position:relative;overflow:hidden;text-align:center}
+.ov-line{position:absolute;top:0;left:0;right:0;height:2px}
+.ov-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;line-height:1.1}
+.ov-lbl{font-size:9.5px;color:var(--tm);margin-top:3px;letter-spacing:.07em;text-transform:uppercase}
+/* SECTIONS GRID */
+.slbl{font-size:9.5px;font-weight:600;letter-spacing:.1em;color:var(--td);text-transform:uppercase;margin-bottom:11px}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+/* SECTION CARD */
+.card{background:var(--s0);border:1px solid var(--s2);border-radius:8px;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:var(--s3)}
+.card.open{border-color:var(--gold)}
+.chead{padding:15px 16px;cursor:pointer;user-select:none;display:flex;align-items:flex-start;gap:12px}
+.cico{width:38px;height:38px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.cinfo{flex:1;min-width:0}
+.ctop{display:flex;align-items:center;justify-content:space-between}
+.ctitle{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--text)}
+.carrow{font-size:12px;color:var(--td);transition:transform .25s}
+.card.open .carrow{transform:rotate(180deg)}
+.csub{font-size:11px;color:var(--tm);margin:3px 0 9px}
+.cstats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.cv{font-family:'Syne',sans-serif;font-size:18px;font-weight:600}
+.cl{font-size:10px;color:var(--td);margin-left:2px}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:10px;padding:2px 9px;border-radius:10px;border:1px solid transparent;white-space:nowrap}
+.ch-g{background:rgba(48,160,96,.12);color:var(--green2);border-color:rgba(48,160,96,.3)}
+.ch-b{background:rgba(56,168,200,.12);color:var(--teal2);border-color:rgba(56,168,200,.3)}
+.ch-a{background:rgba(208,128,24,.12);color:var(--amber2);border-color:rgba(208,128,24,.3)}
+.ch-r{background:rgba(192,56,56,.12);color:var(--red2);border-color:rgba(192,56,56,.3)}
+.ch-p{background:rgba(120,96,200,.12);color:var(--purple2);border-color:rgba(120,96,200,.3)}
+/* DRILL-DOWN */
+.drill{display:none;border-top:1px solid var(--s2);background:var(--bg)}
+.drill.show{display:block}
+.di{padding:16px 18px}
+/* TABLE */
+.tbar{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tlbl{font-size:12px;font-weight:500;color:var(--text);flex:1}
 .ctrl{background:var(--s1);border:1px solid var(--s2);color:var(--text);
-  padding:6px 12px;border-radius:4px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer}
+  padding:5px 10px;border-radius:4px;font-size:11px;font-family:'Inter',sans-serif;outline:none}
 .ctrl:focus{border-color:var(--gold)}
-.tbl-wrap{overflow-x:auto;max-height:500px;overflow-y:auto}
-.tbl-wrap::-webkit-scrollbar{width:4px;height:4px}
-.tbl-wrap::-webkit-scrollbar-thumb{background:var(--s2);border-radius:2px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead{position:sticky;top:0;z-index:2}
-th{background:var(--s1);padding:10px 14px;text-align:left;font-weight:500;
-  font-size:10px;letter-spacing:.07em;color:var(--tm);text-transform:uppercase;
-  border-bottom:1px solid var(--gold);white-space:nowrap;cursor:pointer;user-select:none}
-th:hover{color:var(--text)}
-th.right{text-align:right}
-td{padding:8px 14px;border-bottom:1px solid var(--s1);vertical-align:middle}
-tr:hover td{background:var(--s1)}
-tr:last-child td{border-bottom:none}
-td.right{text-align:right}
-td.num{font-family:'Syne',sans-serif;font-weight:500}
-.tbl-footer{padding:8px 18px;font-size:11px;color:var(--td);border-top:1px solid var(--s1)}
-
-/* ── PROGRESS CELL ── */
-.prog{display:flex;align-items:center;gap:8px;min-width:110px}
-.prog-bg{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;border-radius:3px}
-.prog-lbl{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;min-width:34px;text-align:right}
-
-/* ── BADGE ── */
-.badge{display:inline-block;padding:3px 9px;border-radius:12px;font-size:10px;
-  font-weight:500;border:1px solid transparent;white-space:nowrap}
-.b-done{background:rgba(42,138,90,.15);color:#3ACA80;border-color:rgba(42,138,90,.3)}
-.b-on  {background:rgba(42,138,154,.15);color:#3ABACF;border-color:rgba(42,138,154,.3)}
-.b-prog{background:rgba(192,122,16,.15);color:#F0A020;border-color:rgba(192,122,16,.3)}
-.b-none{background:transparent;color:var(--td);border-color:var(--s2)}
-
-/* ── COURSE DETAIL EXPAND ── */
-.detail-row td{background:var(--bg);padding:12px 18px}
-.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
-.course-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--tm);
-  background:var(--s0);border:1px solid var(--s1);border-radius:4px;padding:6px 10px}
-.course-item .ci-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-
-/* ── FOOTER ── */
-footer{padding:16px 32px;border-top:1px solid var(--s1);display:flex;
-  justify-content:space-between;font-size:11px;color:var(--td)}
-
-/* ── PRINT ── */
-@media print{
-  header .header-right,.print-btn,.ctrls{display:none}
-  body{background:#fff;color:#000}
-  .kpi,.card,.tbl-card,.mc{border:1px solid #ddd;background:#fff}
-  th{background:#f5f5f5;color:#333}
-  td{border-bottom:1px solid #eee}
-}
-
-@media(max-width:900px){
-  .kpi-grid{grid-template-columns:repeat(3,1fr)}
-  .grid-2,.grid-2b{grid-template-columns:1fr}
-  main{padding:16px}
-  header{padding:0 16px}
-}
-@media(max-width:580px){
-  .kpi-grid{grid-template-columns:1fr 1fr}
-  .brand-title{font-size:14px}
-}
+.tw{overflow-x:auto;border-radius:5px;border:1px solid var(--s2);max-height:460px;overflow-y:auto}
+.tw::-webkit-scrollbar{width:4px;height:4px}.tw::-webkit-scrollbar-thumb{background:var(--s2);border-radius:2px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead{position:sticky;top:0;z-index:10}
+th{background:var(--s1);padding:8px 12px;text-align:left;font-weight:500;font-size:10px;
+  letter-spacing:.06em;color:var(--tm);text-transform:uppercase;
+  border-bottom:1px solid var(--gold);white-space:nowrap;cursor:pointer}
+th:hover{color:var(--text)}th.r{text-align:right}
+td{padding:7px 12px;border-bottom:1px solid var(--s1);vertical-align:middle}
+tr:last-child td{border-bottom:none}tr:hover td{background:var(--s1)}td.r{text-align:right}
+.tfooter{font-size:10px;color:var(--td);margin-top:5px}
+/* PROGRESS */
+.pr{display:flex;align-items:center;gap:6px}
+.pb{flex:1;height:5px;background:var(--s2);border-radius:3px;overflow:hidden;min-width:50px}
+.pf{height:100%;border-radius:3px}
+.pt{font-size:10px;font-weight:600;min-width:30px;text-align:right}
+/* BADGE */
+.bd{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:500;border:1px solid transparent}
+.bd-c{background:rgba(48,160,96,.14);color:var(--green2);border-color:rgba(48,160,96,.3)}
+.bd-p{background:rgba(208,128,24,.14);color:var(--amber2);border-color:rgba(208,128,24,.3)}
+.bd-n{color:var(--td);border-color:var(--s2)}
+.bd-t{background:rgba(56,168,200,.12);color:var(--teal2);border-color:rgba(56,168,200,.3)}
+/* GRID HELPERS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* CHART BOX */
+.cbox{background:var(--s0);border:1px solid var(--s2);border-radius:6px;padding:13px}
+.ctitleb{font-size:12px;font-weight:500;color:var(--text);margin-bottom:11px}
+/* BATCH SECTION */
+.bsec{background:var(--s1);border:1px solid var(--s2);border-radius:6px;padding:12px;margin-bottom:10px}
+.bsec-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+/* COURSE LIST */
+.csec{margin-bottom:12px}
+.csec-lbl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--s2)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:5px}
+.ci{background:var(--s0);border:1px solid var(--s2);border-radius:4px;padding:7px 10px;
+  font-size:11px;color:var(--tm);display:flex;align-items:center;gap:7px}
+.cinum{font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--gold);min-width:20px}
+.citag{font-size:9px;padding:1px 6px;border-radius:8px;margin-left:auto;white-space:nowrap}
+.cit-i{background:rgba(56,168,200,.12);color:var(--teal2);border:1px solid rgba(56,168,200,.2)}
+.cit-a{background:rgba(208,128,24,.12);color:var(--amber2);border:1px solid rgba(208,128,24,.2)}
+.cit-e{background:rgba(192,56,56,.12);color:var(--red2);border:1px solid rgba(192,56,56,.2)}
+/* SCHEDULE */
+.sitem{background:var(--s0);border:1px solid var(--s2);border-left:3px solid var(--gold);
+  border-radius:5px;padding:12px 14px;margin-bottom:8px}
+.sdate{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--gold2);margin-bottom:3px}
+.smeta{font-size:11px;color:var(--tm);line-height:1.7}
+/* GRADE PILLS */
+.gpill{background:var(--s1);border:1px solid var(--s2);border-radius:4px;padding:6px 12px;
+  display:flex;align-items:center;gap:8px}
+.gnum{font-family:'Syne',sans-serif;font-size:17px;font-weight:600;color:var(--gold)}
+.glbl{font-size:10px;color:var(--td)}
+/* SPOC CARD */
+.spcard{background:var(--s0);border:1px solid var(--s2);border-radius:5px;padding:10px 12px}
+.spname{font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}
+.spnum{font-family:'Syne',sans-serif;font-size:17px;font-weight:600;color:var(--teal2)}
+/* LEVEL BAR */
+.lvbar{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.lvname{font-size:10px;color:var(--tm);min-width:28px}
+.lvbg{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden}
+.lvfill{height:100%;border-radius:3px}
+.lvn{font-size:10px;font-weight:600}
+/* SEPARATOR */
+.sep{height:1px;background:var(--s2);margin:14px 0}
+footer{padding:13px 28px;border-top:1px solid var(--s2);display:flex;justify-content:space-between;
+  font-size:10px;color:var(--td)}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.strip{grid-template-columns:repeat(3,1fr)}.g2,.g3{grid-template-columns:1fr}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.strip{grid-template-columns:1fr 1fr}}
+@media print{.hright .hbtn,.tbar .ctrl{display:none}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="brand">
-    <div class="brand-bar"></div>
+    <div class="bbar"></div>
     <div>
-      <div class="brand-title">QE with AI — Training Dashboard</div>
-      <div class="brand-sub">Bangalore Initiative · 2025</div>
+      <div class="btitle">Bangalore Initiative Dashboard</div>
+      <div class="bsub">AI-NATIVE LEARNING PROGRAMME · 2026</div>
     </div>
   </div>
-  <div class="header-right">
-    <span class="gen-time">Generated: 04 Jun 2026, 03:45 PM</span>
-    <div class="live-badge"><div class="live-dot"></div>Live Data</div>
-    <button class="print-btn" onclick="window.print()">⎙ Print / Save PDF</button>
+  <div class="hright">
+    <div class="live"><div class="ldot"></div><span>Live · <span id="ts">—</span></span></div>
+    <button class="hbtn" onclick="window.print()">⎙ Save PDF</button>
   </div>
 </header>
 
 <main>
+<!-- OVERVIEW STRIP -->
+<div class="strip" id="strip"></div>
 
-<!-- KPI ROW -->
-<div class="kpi-grid" id="kpi-row"></div>
-
-<!-- CHARTS ROW 1 -->
-<div class="sec-lbl">Completion Overview</div>
-<div class="grid-2">
-  <div class="card">
-    <div class="card-title">Overall Completion % per Participant</div>
-    <div style="position:relative;height:900px">
-      <canvas id="c1" role="img" aria-label="Horizontal bar chart showing overall completion percentage for each participant"></canvas>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Avg Completion by Category</div>
-    <div id="donut-legend" style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;color:var(--tm)"></div>
-    <div style="position:relative;height:210px">
-      <canvas id="c2" role="img" aria-label="Doughnut chart comparing mandatory, optional and overall average completion"></canvas>
-    </div>
-  </div>
-</div>
-
-<!-- CHARTS ROW 2 -->
-<div class="sec-lbl" style="margin-top:8px">Mentor Cohort Analysis</div>
-<div class="grid-2b">
-  <div class="card">
-    <div class="card-title">Mentor Cohort — Avg Completion %</div>
-    <div style="position:relative;height:260px">
-      <canvas id="c3" role="img" aria-label="Grouped bar chart comparing mandatory, optional and overall average completion per mentor"></canvas>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Status Breakdown per Mentor (course count)</div>
-    <div style="position:relative;height:260px">
-      <canvas id="c4" role="img" aria-label="Stacked bar chart showing completed, in-progress and not started course counts per mentor"></canvas>
-    </div>
-  </div>
-</div>
-
-<!-- MENTOR CARDS -->
-<div class="sec-lbl" style="margin-top:8px">Mentor Snapshot</div>
-<div class="grid-mentor" id="mentor-grid"></div>
-
-<!-- PARTICIPANT TABLE -->
-<div class="sec-lbl" style="margin-top:8px">Participant Progress Detail</div>
-<div class="tbl-card">
-  <div class="tbl-top">
-    <div class="tbl-title">All Participants</div>
-    <div class="ctrls">
-      <input class="ctrl" id="srch" type="text" placeholder="Search name…" oninput="filterTable()"/>
-      <select class="ctrl" id="fmtr" onchange="filterTable()"><option value="">All Mentors</option></select>
-      <select class="ctrl" id="fsts" onchange="filterTable()">
-        <option value="">All Progress</option>
-        <option value="done">Fully Completed</option>
-        <option value="on">On Track (≥50%)</option>
-        <option value="prog">In Progress</option>
-        <option value="none">Not Started</option>
-      </select>
-      <button class="ctrl" onclick="exportCSV()">↓ Export CSV</button>
-    </div>
-  </div>
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th style="width:36px">#</th>
-          <th onclick="sort('name')">Name ↕</th>
-          <th onclick="sort('mentor')">Mentor ↕</th>
-          <th class="right" onclick="sort('mandPct')">Mandatory ↕</th>
-          <th class="right" onclick="sort('optPct')">Optional ↕</th>
-          <th class="right" onclick="sort('overallPct')">Overall ↕</th>
-          <th>Status</th>
-          <th style="width:60px;text-align:center">Detail</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
-  <div class="tbl-footer" id="tbl-count"></div>
-</div>
-
+<div class="slbl">Programme Sections — click any card for details</div>
+<div class="grid" id="grid"></div>
 </main>
 
 <footer>
-  <span>QE with AI Training Program · Bangalore Initiative · 2025</span>
-  <span>Generated 04 Jun 2026, 03:45 PM · Data from QE_Dashboard_Final.xlsx</span>
+  <span>Bangalore Initiative · Bangalore Location · 2026</span>
+  <span id="gen-time"></span>
 </footer>
 
 <script>
-const D = {"generated":"04 Jun 2026, 03:45 PM","nMand":11,"nOpt":4,"nTotal":15,"total":66,"avgMand":0.0,"avgOpt":0.0,"avgOverall":0.0,"nMentors":11,"mandCourses":["LLM Fundamentals","Gen AI Fundamentals","Prompt Engg Fundamentals","Prompt Engg Advanced","AI SDLC Foundations","AI-Assisted Quality Assurance","AI-Assisted Test Automation","EliteA","CodeMie","GitHub Copilot","GitHub Copilot"],"optCourses":["GitHub Copilot","Claude","Claude","Cursor"],"participants":[{"name":"Abin Thankachen","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Anu Shaji","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Aruna Murugan","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Kriti Kaushal","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Manjunath Handa","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Nikhil Mayank","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Adithya Biju","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Arabinda Parida","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Deepu Paul","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Habeeb Mohamed","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Santhosh Vadivel","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Vidushi Bhardwaj","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sanjay Gopalakrishna","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Satyaprakash Rout","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shalini Siddaraju","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Soumi Pal","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"SreeLakshmi Dasari","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sweta Kumari","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ankur Malviya2","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Arun Sarode","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Loganayaki Sivasamy","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Rajesh Kumar6","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ravi Varma","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sujatha Mylavarapu","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Abhilash Thapliyal","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Amit Kumar5","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ashok Kumar Pradhan","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Bhargavi Somagutta","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Karthik Krishnachar","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Koshambhi Vyas","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Devendra Paliwal","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Gururaj As","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ishan Sharma","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Jyothi R","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Kavitha Kalappa","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Mohamed Faisal","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Prajwal Hp","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sreeja ArukaduVajrabala","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Vishnukumar Dhanarajan","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Punit Dixit","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shivakumar Patil","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sandeep Shrinivas","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Nikitha Fernandes","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shashank Sinha","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shashikumar B","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Vinay Kumar C","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Abhinav Kumar4","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Bharath Krishnamurthy","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Lavanya R","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Mrityunjay Kumar","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ramya Rathinasabhapathi","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Subhasri Jothi Prakasam","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Santhoshkumarreddy Kaladi","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shama Firoz","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Chidananda Hm","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Debajyoti Mohapatra","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Monika Thamalapura","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Punyashree Hm","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Raju Shivaji Chavan","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ujjal Saha","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Asha Kulkarni1","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Avishek Behera","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Manjunath Shivashankar","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Praveen Kumar5","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Subrahmanyam Mallapareddy","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Devendra Rajput","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mandStatuses":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"optStatuses":["Not Started","Not Started","Not Started","Not Started"]}],"mentors":[{"name":"Amit Kumar1","count":6,"mentees":["Abin Thankachen","Anu Shaji","Aruna Murugan","Kriti Kaushal","Manjunath Handa","Nikhil Mayank"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"G Thimmaraju","count":6,"mentees":["Adithya Biju","Arabinda Parida","Deepu Paul","Habeeb Mohamed","Santhosh Vadivel","Vidushi Bhardwaj"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Gangadhar Dubey","count":6,"mentees":["Sanjay Gopalakrishna","Satyaprakash Rout","Shalini Siddaraju","Soumi Pal","SreeLakshmi Dasari","Sweta Kumari"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Kannan Mahamuni","count":6,"mentees":["Ankur Malviya2","Arun Sarode","Loganayaki Sivasamy","Rajesh Kumar6","Ravi Varma","Sujatha Mylavarapu"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Lakshmi Priya","count":6,"mentees":["Abhilash Thapliyal","Amit Kumar5","Ashok Kumar Pradhan","Bhargavi Somagutta","Karthik Krishnachar","Koshambhi Vyas"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Nazimullah Basha","count":6,"mentees":["Devendra Paliwal","Gururaj As","Ishan Sharma","Jyothi R","Kavitha Kalappa","Mohamed Faisal"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Preetham Halibandi","count":6,"mentees":["Prajwal Hp","Sreeja ArukaduVajrabala","Vishnukumar Dhanarajan","Punit Dixit","Shivakumar Patil","Sandeep Shrinivas"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Preethi Rajappa","count":6,"mentees":["Nikitha Fernandes","Shashank Sinha","Shashikumar B","Vinay Kumar C","Abhinav Kumar4","Bharath Krishnamurthy"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Ravindra Sanaga","count":6,"mentees":["Lavanya R","Mrityunjay Kumar","Ramya Rathinasabhapathi","Subhasri Jothi Prakasam","Santhoshkumarreddy Kaladi","Shama Firoz"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Sathishkumar Palanisamy","count":6,"mentees":["Chidananda Hm","Debajyoti Mohapatra","Monika Thamalapura","Punyashree Hm","Raju Shivaji Chavan","Ujjal Saha"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0},{"name":"Shilpa Shastry","count":6,"mentees":["Asha Kulkarni1","Avishek Behera","Manjunath Shivashankar","Praveen Kumar5","Subrahmanyam Mallapareddy","Devendra Rajput"],"avgMandDone":0.0,"avgOptDone":0.0,"avgMandPct":0.0,"avgOptPct":0.0,"avgOverall":0.0}]};
+const D = {"generated":"05 Jun 2026, 04:04 AM","qe":{"currentBatch":[{"name":"Amit Kumar1","mentor":"Karthik Dubagunta","start":"08 Jun 2026"},{"name":"G Thimmaraju","mentor":"Karthik Dubagunta","start":"08 Jun 2026"},{"name":"Gangadhar Dubey","mentor":"Karthik Dubagunta","start":"08 Jun 2026"},{"name":"Kannan Mahamuni","mentor":"Karthik Dubagunta","start":"08 Jun 2026"},{"name":"Lakshmi Priya","mentor":"Karthik Dubagunta","start":"08 Jun 2026"},{"name":"Nazimullah Basha","mentor":"Karthik Dubagunta","start":"08 Jun 2026"},{"name":"Pramodh Mylappanahalli","mentor":"Karthik Dubagunta","start":"08 Jun 2026"},{"name":"Sathishkumar Palanisamy","mentor":"Karthik Dubagunta","start":"08 Jun 2026"}],"nextBatch":[{"name":"Abin Thankachen","level":"A3","mentor":"Amit Kumar1","start":"02 Jun 2026"},{"name":"Anu Shaji","level":"A4","mentor":"Amit Kumar1","start":"02 Jun 2026"},{"name":"Aruna Murugan","level":"A3","mentor":"Amit Kumar1","start":"02 Jun 2026"},{"name":"Kriti Kaushal","level":"A3","mentor":"Amit Kumar1","start":"02 Jun 2026"},{"name":"Manjunath Handa","level":"A4","mentor":"Amit Kumar1","start":"02 Jun 2026"},{"name":"Nikhil Mayank","level":"A2","mentor":"Amit Kumar1","start":"02 Jun 2026"},{"name":"Adithya Biju","level":"A1","mentor":"G Thimmaraju","start":"02 Jun 2026"},{"name":"Arabinda Parida","level":"A3","mentor":"G Thimmaraju","start":"02 Jun 2026"},{"name":"Deepu Paul","level":"A4","mentor":"G Thimmaraju","start":"02 Jun 2026"},{"name":"Habeeb Mohamed","level":"A4","mentor":"G Thimmaraju","start":"02 Jun 2026"},{"name":"Santhosh Vadivel","level":"A3","mentor":"G Thimmaraju","start":"02 Jun 2026"},{"name":"Vidushi Bhardwaj","level":"A2","mentor":"G Thimmaraju","start":"02 Jun 2026"},{"name":"Sanjay Gopalakrishna","level":"A2","mentor":"Gangadhar Dubey","start":"02 Jun 2026"},{"name":"Satyaprakash Rout","level":"A4","mentor":"Gangadhar Dubey","start":"02 Jun 2026"},{"name":"Shalini Siddaraju","level":"A3","mentor":"Gangadhar Dubey","start":"02 Jun 2026"},{"name":"Soumi Pal","level":"A2","mentor":"Gangadhar Dubey","start":"02 Jun 2026"},{"name":"SreeLakshmi Dasari","level":"A3","mentor":"Gangadhar Dubey","start":"02 Jun 2026"},{"name":"Sweta Kumari","level":"A3","mentor":"Gangadhar Dubey","start":"02 Jun 2026"},{"name":"Ankur Malviya2","level":"A3","mentor":"Kannan Mahamuni","start":"02 Jun 2026"},{"name":"Arun Sarode","level":"A4","mentor":"Kannan Mahamuni","start":"02 Jun 2026"},{"name":"Loganayaki Sivasamy","level":"A3","mentor":"Kannan Mahamuni","start":"02 Jun 2026"},{"name":"Rajesh Kumar6","level":"A3","mentor":"Kannan Mahamuni","start":"02 Jun 2026"},{"name":"Ravi Varma","level":"A4","mentor":"Kannan Mahamuni","start":"02 Jun 2026"},{"name":"Sujatha Mylavarapu","level":"A2","mentor":"Kannan Mahamuni","start":"02 Jun 2026"},{"name":"Abhilash Thapliyal","level":"A3","mentor":"Lakshmi Priya","start":"02 Jun 2026"},{"name":"Amit Kumar5","level":"A4","mentor":"Lakshmi Priya","start":"02 Jun 2026"},{"name":"Ashok Kumar Pradhan","level":"A2","mentor":"Lakshmi Priya","start":"02 Jun 2026"},{"name":"Bhargavi Somagutta","level":"A3","mentor":"Lakshmi Priya","start":"02 Jun 2026"},{"name":"Karthik Krishnachar","level":"A3","mentor":"Lakshmi Priya","start":"02 Jun 2026"},{"name":"Koshambhi Vyas","level":"A4","mentor":"Lakshmi Priya","start":"02 Jun 2026"},{"name":"Prajwal Hp","level":"A3","mentor":"Preetham Halibandi","start":"02 Jun 2026"},{"name":"Sreeja ArukaduVajrabala","level":"A3","mentor":"Preetham Halibandi","start":"02 Jun 2026"},{"name":"Vishnukumar Dhanarajan","level":"A2","mentor":"Preetham Halibandi","start":"02 Jun 2026"},{"name":"Punit Dixit","level":"A3","mentor":"Preetham Halibandi","start":"02 Jun 2026"},{"name":"Shivakumar Patil","level":"A3","mentor":"Preetham Halibandi","start":"02 Jun 2026"},{"name":"Sandeep Shrinivas","level":"A3","mentor":"Preetham Halibandi","start":"02 Jun 2026"},{"name":"Nikitha Fernandes","level":"A3","mentor":"Preethi Rajappa","start":"02 Jun 2026"},{"name":"Shashank Sinha","level":"A3","mentor":"Preethi Rajappa","start":"02 Jun 2026"},{"name":"Shashikumar B","level":"A3","mentor":"Preethi Rajappa","start":"02 Jun 2026"},{"name":"Vinay Kumar C","level":"A3","mentor":"Preethi Rajappa","start":"02 Jun 2026"},{"name":"Abhinav Kumar4","level":"A2","mentor":"Preethi Rajappa","start":"02 Jun 2026"},{"name":"Bharath Krishnamurthy","level":"A4","mentor":"Preethi Rajappa","start":"02 Jun 2026"},{"name":"Lavanya R","level":"A3","mentor":"Ravindra Sanaga","start":"02 Jun 2026"},{"name":"Mrityunjay Kumar","level":"A4","mentor":"Ravindra Sanaga","start":"02 Jun 2026"},{"name":"Ramya Rathinasabhapathi","level":"A2","mentor":"Ravindra Sanaga","start":"02 Jun 2026"},{"name":"Subhasri Jothi Prakasam","level":"A3","mentor":"Ravindra Sanaga","start":"02 Jun 2026"},{"name":"Santhoshkumarreddy Kaladi","level":"A2","mentor":"Ravindra Sanaga","start":"02 Jun 2026"},{"name":"Shama Firoz","level":"A3","mentor":"Ravindra Sanaga","start":"02 Jun 2026"},{"name":"Chidananda Hm","level":"A3","mentor":"Sathishkumar Palanisamy","start":"02 Jun 2026"},{"name":"Debajyoti Mohapatra","level":"A4","mentor":"Sathishkumar Palanisamy","start":"02 Jun 2026"},{"name":"Monika Thamalapura","level":"A3","mentor":"Sathishkumar Palanisamy","start":"02 Jun 2026"},{"name":"Punyashree Hm","level":"A3","mentor":"Sathishkumar Palanisamy","start":"02 Jun 2026"},{"name":"Raju Shivaji Chavan","level":"A4","mentor":"Sathishkumar Palanisamy","start":"02 Jun 2026"},{"name":"Ujjal Saha","level":"A3","mentor":"Sathishkumar Palanisamy","start":"02 Jun 2026"},{"name":"Asha Kulkarni1","level":"A3","mentor":"Shilpa Shastry","start":"02 Jun 2026"},{"name":"Avishek Behera","level":"A4","mentor":"Shilpa Shastry","start":"02 Jun 2026"},{"name":"Manjunath Shivashankar","level":"A3","mentor":"Shilpa Shastry","start":"02 Jun 2026"},{"name":"Praveen Kumar5","level":"A2","mentor":"Shilpa Shastry","start":"02 Jun 2026"},{"name":"Subrahmanyam Mallapareddy","level":"A4","mentor":"Shilpa Shastry","start":"02 Jun 2026"},{"name":"Devendra Rajput","level":"A3","mentor":"Shilpa Shastry","start":"02 Jun 2026"},{"name":"Anshad Faiz","level":"A2","mentor":"Pramodh Mylappanahalli","start":"02 Jun 2026"},{"name":"Kundan Kumar","level":"A3","mentor":"Pramodh Mylappanahalli","start":"02 Jun 2026"},{"name":"Nisha Binoy","level":"A3","mentor":"Pramodh Mylappanahalli","start":"02 Jun 2026"},{"name":"Pratap Chandra Ghosh","level":"A4","mentor":"Pramodh Mylappanahalli","start":"02 Jun 2026"},{"name":"Deevdeep Parida","level":"A3","mentor":"Pramodh Mylappanahalli","start":"02 Jun 2026"},{"name":"Arpitha Shivappa","level":"A2","mentor":"Pramodh Mylappanahalli","start":"02 Jun 2026"},{"name":"Gururaj As","level":"A3","mentor":"Nazimullah Basha","start":"02 Jun 2026"},{"name":"Jyothi R","level":"A2","mentor":"Nazimullah Basha","start":"02 Jun 2026"},{"name":"Mohamed Faisal","level":"A3","mentor":"Nazimullah Basha","start":"02 Jun 2026"},{"name":"Vidushi Bhardwaj","level":"A2","mentor":"Nazimullah Basha","start":"02 Jun 2026"},{"name":"Santosh Kumar Reddy","level":"A2","mentor":"Nazimullah Basha","start":"02 Jun 2026"}],"participants":[{"name":"Abin Thankachen","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Anu Shaji","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Aruna Murugan","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Kriti Kaushal","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Manjunath Handa","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Nikhil Mayank","mentor":"Amit Kumar1","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Adithya Biju","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Arabinda Parida","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Deepu Paul","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Habeeb Mohamed","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Santhosh Vadivel","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Vidushi Bhardwaj","mentor":"G Thimmaraju","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sanjay Gopalakrishna","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Satyaprakash Rout","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shalini Siddaraju","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Soumi Pal","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"SreeLakshmi Dasari","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sweta Kumari","mentor":"Gangadhar Dubey","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ankur Malviya2","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Arun Sarode","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Loganayaki Sivasamy","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Rajesh Kumar6","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ravi Varma","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sujatha Mylavarapu","mentor":"Kannan Mahamuni","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Abhilash Thapliyal","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Amit Kumar5","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ashok Kumar Pradhan","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Bhargavi Somagutta","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Karthik Krishnachar","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Koshambhi Vyas","mentor":"Lakshmi Priya","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Prajwal Hp","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sreeja ArukaduVajrabala","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Vishnukumar Dhanarajan","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Punit Dixit","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shivakumar Patil","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Sandeep Shrinivas","mentor":"Preetham Halibandi","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Nikitha Fernandes","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shashank Sinha","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shashikumar B","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Vinay Kumar C","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Abhinav Kumar4","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Bharath Krishnamurthy","mentor":"Preethi Rajappa","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Lavanya R","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Mrityunjay Kumar","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ramya Rathinasabhapathi","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Subhasri Jothi Prakasam","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Santhoshkumarreddy Kaladi","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Shama Firoz","mentor":"Ravindra Sanaga","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Chidananda Hm","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Debajyoti Mohapatra","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Monika Thamalapura","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Punyashree Hm","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Raju Shivaji Chavan","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Ujjal Saha","mentor":"Sathishkumar Palanisamy","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Anshad Faiz","mentor":"Pramodh Mylappanahalli","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Kundan Kumar","mentor":"Pramodh Mylappanahalli","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Nisha Binoy","mentor":"Pramodh Mylappanahalli","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Pratap Chandra Ghosh","mentor":"Pramodh Mylappanahalli","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Deevdeep Parida","mentor":"Pramodh Mylappanahalli","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Arpitha Shivappa","mentor":"Pramodh Mylappanahalli","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Gururaj As","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Jyothi R","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Mohamed Faisal","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Vidushi Bhardwaj","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Santosh Kumar Reddy","mentor":"Nazimullah Basha","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Asha Kulkarni1","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Avishek Behera","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Manjunath Shivashankar","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Praveen Kumar5","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Subrahmanyam Mallapareddy","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]},{"name":"Devendra Rajput","mentor":"Shilpa Shastry","mandDone":0,"mandProg":0,"optDone":0,"optProg":0,"mandPct":0.0,"optPct":0.0,"overallPct":0.0,"mand":["Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started","Not Started"],"opt":["Not Started","Not Started","Not Started","Not Started"]}],"mandCourses":["LLM Fundamentals","Gen AI Fundamentals","Prompt Engg Fundamentals","Prompt Engg Advanced","AI SDLC Foundations","AI-Assisted Quality Assurance","AI-Assisted Test Automation","EliteA","CodeMie","GitHub Copilot","GitHub Copilot"],"optCourses":["GitHub Copilot","Claude","Claude","Cursor"]},"agentic":{"currentBatch":[{"name":"Avinash Chandrasekhar","mentor":"Jalaja Muthuraj","start":"15 Mar 2026","status":"In-Progress"},{"name":"Ishan Bhatt","mentor":"Jalaja Muthuraj","start":"15 Mar 2026","status":"Completed"},{"name":"Sujata Sar","mentor":"Jalaja Muthuraj","start":"15 Mar 2026","status":"Completed"},{"name":"Preetham Halibandi","mentor":"Jalaja Muthuraj","start":"15 Mar 2026","status":"In-Progress"}],"nextBatch":[{"name":"Amit Kumar1","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"G Thimmaraju","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Gangadhar Dubey","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Kannan Mahamuni","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Lakshmi Priya","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Nazimullah Basha","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Pramodh Mylappanahalli","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Sathishkumar Palanisamy","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Karthik Dubagunta","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Preetam Halibandi","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Kamal Singla","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Bharath Krishnamurthy","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Mithun Kumar","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"}],"courses":{"Intermediate":["Prompt Engineering (Advanced)","RAG & MCP Fundamentals","RAG + Agent (Langchain)","Docker & Containers","GitHub Copilot & Cursor"],"Advanced":["Agentic AI Framework (LangGraph)","Advanced RAG","Agentic Evaluation Tool","AI Memory Concepts"],"Expert":["Multi-Agent Enterprise Architectures","Multi-modal RAG","Evaluation Tool (Advanced)"]}},"polyglot":{"list":[{"name":"Avinash Chandrasekhar"},{"name":"Ishan Bhatt"},{"name":"Sujata Sar"},{"name":"Preetham Halibandi"},{"name":"Jalaja Muthuraj"}]},"bench":{"resources":[{"name":"Abhinav Kumar4","level":"A2","skill":"Automated Testing in JS"},{"name":"Aishwarya Venkata Subramanian","level":"A3","skill":"Automated Testing in JS"},{"name":"Amitkumar Singh","level":"A3","skill":"Functional Testing"},{"name":"Aruna Murugan","level":"A3","skill":"Automated Testing in Java"},{"name":"Atish Amrit","level":"A4","skill":"Automated Testing in Java"},{"name":"Avinash Chandrashekar","level":"B3","skill":"Quality Architecture"},{"name":"Benila Selvaraj","level":"A3","skill":"Automated Testing in Java"},{"name":"Bhavani K v","level":"A3","skill":"Automated Testing in .NET"},{"name":"Chinnaraj Murali","level":"A3","skill":"Automated Testing in Java"},{"name":"Gaurav Gupta4","level":"A4","skill":"Automated Testing in Java"},{"name":"Girisha Shambulingappa Jeenakeri","level":"A3","skill":"Automated Testing in Python"},{"name":"Jyothi R","level":"A2","skill":"Automated Testing in Python"},{"name":"Kamal Singla","level":"A5","skill":"Automated Testing in Java"},{"name":"Karthik Krishnachar","level":"A3","skill":"Automated Testing in Java"},{"name":"Kavitha Kalappa","level":"A2","skill":"Functional Testing"},{"name":"Kavya Reddy","level":"A3","skill":"Automated Testing in Java"},{"name":"Logeshwaran D","level":"A3","skill":"Automated Testing in Java"},{"name":"Manisha Malik","level":"A3","skill":"Automated Testing in Java"},{"name":"Mohammed Danial","level":"A1","skill":"Automated Testing in JS"},{"name":"Monika Thamalapura","level":"A3","skill":"Automated Testing in Java"},{"name":"Mrityunjay Kumar","level":"A4","skill":"Automated Testing in JS"},{"name":"Nikitha Fernandes","level":"A3","skill":"Automated Testing in .NET"},{"name":"Prajwal Hp","level":"A3","skill":"Automated Testing in JS"},{"name":"Prasanta Mishra","level":"A3","skill":"Automated Testing in .NET"},{"name":"Pratap Chandra Ghosh","level":"A4","skill":"Automated Testing in Java"},{"name":"Preethi bm","level":"A1","skill":"Automated Testing in JS"},{"name":"Puja Saha","level":"A3","skill":"Automated Testing in Java"},{"name":"Punyashree Hm","level":"A3","skill":"Automated Testing in Java"},{"name":"Raghavendra Pai","level":"B4","skill":"Test Management"},{"name":"Rajesh Kumar6","level":"A3","skill":"Automated Testing in JS"},{"name":"Reethu Thomas","level":"A3","skill":"Automated Testing in Python"},{"name":"Santhoshkumarreddy Kaladi","level":"A2","skill":"Automated Testing in JS"},{"name":"Satheesh Kumar Nedumaran","level":"A3","skill":"Automated Testing in JS"},{"name":"Satyaki Chatterjee","level":"A3","skill":"Functional Testing"},{"name":"Shalini Siddaraju","level":"A3","skill":"Automated Testing in Java"},{"name":"Shikha Agarwal","level":"A3","skill":"Automated Testing in Java"},{"name":"Shilpa Kalikiri","level":"A2","skill":"Automated Testing in Python"},{"name":"Shilpa Shastry","level":"B2","skill":"Test Management"},{"name":"Soumava Samanta","level":"A4","skill":"Automated Testing in Java"},{"name":"Srikanth Mohan","level":"B2","skill":"Quality Architecture"},{"name":"Sujata Sar","level":"B3","skill":"Test Management"},{"name":"Suputhra Virupakashappa","level":"A3","skill":"Automated Testing in Java"},{"name":"Vishnukumar Dhanarajan","level":"A2","skill":"Automated Testing in Java"},{"name":"Yathish G","level":"A1","skill":"Automated Testing in Java"}],"config":{"frequency":"Bi-Weekly","day":"Friday","next":"TBD","notes":"All bench resources welcome to join"}},"techTalk":{"talks":[{"date":"12 Jun 2026","speaker":"TBD","topic":"To be announced","status":"Upcoming"}]},"committed":{"qe":[{"name":"Abhilash Thapliyal","level":"A3","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Abin Thankachen","level":"A3","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Adithya Biju","level":"A1","mentor":"G Thimmaraju","start":"01 Jun 2026"},{"name":"Aditya Raichur","level":"A3","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Amit Kumar1","level":"A4","mentor":"Karthik Dubagunta","start":"01 Jun 2026"},{"name":"Amit Kumar5","level":"A4","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Ankur Malviya2","level":"A3","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Anshad Faiz","level":"A2","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Anu Shaji","level":"A4","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Aparna Saxena","level":"A3","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Arabinda Parida","level":"A3","mentor":"G Thimmaraju","start":"01 Jun 2026"},{"name":"Arjun SN","level":"A3","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Arpitha Shivappa","level":"A2","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Arun Sarode","level":"A4","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Aruna Murugan","level":"A3","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Asha Kulkarni1","level":"A3","mentor":"Shilpa Shastry","start":"01 Jun 2026"},{"name":"Ashok Kumar Pradhan","level":"A2","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Aswini Baliarsingh","level":"A4","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Avishek Behera","level":"A4","mentor":"Shilpa Shastry","start":"01 Jun 2026"},{"name":"Bharath Krishnamurthy","level":"A4","mentor":"Preethi Rajaapa","start":"01 Jun 2026"},{"name":"Bhargavi Somagutta","level":"A3","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Chidananda Hm","level":"A3","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Debajyoti Mohapatra","level":"A4","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Debajyoti Mukherjee","level":"A3","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Deepu Paul","level":"A4","mentor":"G Thimmaraju","start":"01 Jun 2026"},{"name":"Deevdeep Parida","level":"A3","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Devendra Paliwal","level":"A4","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Gangadhar Dubey","level":"A5","mentor":"Karthik Dubagunta","start":"01 Jun 2026"},{"name":"Girisha Shambulingappa Jeenakeri","level":"A3","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Gururaj As","level":"A3","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Habeeb Mohamed","level":"A4","mentor":"G Thimmaraju","start":"01 Jun 2026"},{"name":"Ishan Sharma","level":"A3","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Jyothi R","level":"A2","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Karthik Krishnachar","level":"A3","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Karthika Bade","level":"A3","mentor":"Shilpa Shastry","start":"01 Jun 2026"},{"name":"Kavitha Kalappa","level":"A2","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Kokku Yuvaraju","level":"A2","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Koshambhi Vyas","level":"A4","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Kriti Kaushal","level":"A3","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Kundan Kumar","level":"A3","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Lakshmi Eshwar","level":"A2","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Lakshmi Priya","level":"A4","mentor":"Karthik Dubagunta","start":"01 Jun 2026"},{"name":"Lavanya R","level":"A3","mentor":"Ravindra Sanaga","start":"01 Jun 2026"},{"name":"Loganayaki Sivasamy","level":"A3","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Logeshwaran D","level":"A3","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Manjunath Handa","level":"A4","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Manjunath Shivashankar","level":"A3","mentor":"Shilpa Shastry","start":"01 Jun 2026"},{"name":"Mohamed Faisal","level":"A3","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Mohammad Asif2","level":"A3","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Monika Thamalapura","level":"A3","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Mrityunjay Kumar","level":"A4","mentor":"Ravindra Sanaga","start":"01 Jun 2026"},{"name":"Muklesur Rahaman","level":"A2","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Nikhil Mayank","level":"A2","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Nikitha Fernandes","level":"A3","mentor":"Preethi Rajaapa","start":"01 Jun 2026"},{"name":"Nisha Binoy","level":"A3","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Prajwal Hp","level":"A3","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Pratap Chandra Ghosh","level":"A4","mentor":"Pramodh Mylappanahalli","start":"01 Jun 2026"},{"name":"Praveen Kumar5","level":"A2","mentor":"Shilpa Shastry","start":"01 Jun 2026"},{"name":"Preethi Rajappa","level":"B2","mentor":"","start":"01 Jun 2026"},{"name":"Punit Dixit","level":"A3","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Punyashree Hm","level":"A3","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Rajesh Kumar6","level":"A3","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Raju Shivaji Chavan","level":"A4","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Ramya Rathinasabhapathi","level":"A2","mentor":"Ravindra Sanaga","start":"01 Jun 2026"},{"name":"Ravi Varma","level":"A4","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Sakshi Manglani","level":"A2","mentor":"Shilpa Shastry","start":"01 Jun 2026"},{"name":"Sanjay Gopalakrishna","level":"A2","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Santhosh Vadivel","level":"A3","mentor":"G Thimmaraju","start":"01 Jun 2026"},{"name":"Santhoshkumarreddy Kaladi","level":"A2","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Sarita Sharma","level":"A2","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Sathishkumar Palanisamy","level":"A4","mentor":"Karthik Dubagunta","start":"01 Jun 2026"},{"name":"Satyaprakash Rout","level":"A4","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Shalini Siddaraju","level":"A3","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Shama Firoz","level":"A3","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Shashank Sinha","level":"A3","mentor":"Preethi Rajaapa","start":"01 Jun 2026"},{"name":"Shashikumar B","level":"A3","mentor":"Preethi Rajaapa","start":"01 Jun 2026"},{"name":"Shikha Shikha","level":"A3","mentor":"Bharath Krishnamurthy","start":"01 Jun 2026"},{"name":"Shilpa Shastry","level":"B2","mentor":"","start":"01 Jun 2026"},{"name":"Shivakumar Patil","level":"A3","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Soumi Pal","level":"A2","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Sreeja ArukaduVajrabala","level":"A3","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"SreeLakshmi Dasari","level":"A3","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Sreelakshmi Sajeev","level":"A2","mentor":"Bharath Krishnamurthy","start":"01 Jun 2026"},{"name":"Subhasri Jothi Prakasam","level":"A3","mentor":"Ravindra Sanaga","start":"01 Jun 2026"},{"name":"Subrahmanyam Mallapareddy","level":"A4","mentor":"Shilpa Shastry","start":"01 Jun 2026"},{"name":"Sujatha Mylavarapu","level":"A2","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Sumanth cl","level":"A3","mentor":"Kannan Mahamuni","start":"01 Jun 2026"},{"name":"Sweta Kumari","level":"A3","mentor":"Gangadhar Dubey","start":"01 Jun 2026"},{"name":"Ujjal Saha","level":"A3","mentor":"Sathishkumar Palanisamy","start":"01 Jun 2026"},{"name":"Vidushi Bhardwaj","level":"A2","mentor":"Nazimullah Basha","start":"01 Jun 2026"},{"name":"Vinay Kalachandra","level":"A2","mentor":"Bharath Krishnamurthy","start":"01 Jun 2026"},{"name":"Vinay Kumar C","level":"A3","mentor":"Preethi Rajaapa","start":"01 Jun 2026"},{"name":"Vishnukumar Dhanarajan","level":"A2","mentor":"Amit Kumar1","start":"01 Jun 2026"},{"name":"Pramodh Mylappanahalli","level":"A4","mentor":"Preethi Rajaapa","start":"01 Jun 2026"},{"name":"Abhinav Kumar4","level":"A2","mentor":"Preethi Rajaapa","start":"01 Jun 2026"},{"name":"Sandeep Shrinivas","level":"A3","mentor":"Lakshmi Priya","start":"01 Jun 2026"},{"name":"Devendra Rajput","level":"A3","mentor":"Shilpa Shastry","start":"01 Jun 2026"}],"agentic":[{"name":"Amit Kumar1","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"G Thimmaraju","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Gangadhar Dubey","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Kannan Mahamuni","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Lakshmi Priya","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Nazimullah Basha","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Pramodh Mylappanahalli","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Sathishkumar Palanisamy","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Karthik Dubagunta","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Preetam Halibandi","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Kamal Singla","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Bharath Krishnamurthy","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"},{"name":"Mithun Kumar","mentor":"Jalaja Muthuraj","start":"08 Jun 2026"}],"grades":{"A1":1,"A2":22,"A3":49,"A4":22,"A5":1,"B2":2},"spocs":[{"name":"Amit Kumar1","total":6,"program":"QE in AI"},{"name":"G Thimmaraju","total":6,"program":""},{"name":"Gangadhar Dubey","total":7,"program":""},{"name":"Kannan Mahamuni","total":6,"program":""},{"name":"Lakshmi Priya","total":6,"program":""},{"name":"Nazimullah Basha","total":6,"program":""},{"name":"Pramodh Mylappanahalli","total":6,"program":""},{"name":"Sathishkumar Palanisamy","total":6,"program":""},{"name":"Karthik Dubagunta","total":6,"program":""},{"name":"Preetam Halibandi","total":6,"program":""},{"name":"Preethi Rajappa","total":6,"program":""},{"name":"Shilpa Shastry","total":6,"program":""},{"name":"Avinash Chandrashekar","total":6,"program":""},{"name":"Sujata Sar","total":5,"program":""},{"name":"Ruhi Ahuja","total":7,"program":"AIIA"},{"name":"Satheesh Velikinti","total":6,"program":""}],"confirmed":["Amit Kumar1","G Thimmaraju","Gangadhar Dubey","Kannan Mahamuni","Lakshmi Priya","Nazimullah Basha","Pramodh Mylappanahalli","Sathishkumar Palanisamy","Karthik Dubagunta","Preetam Halibandi","Preethi Rajappa","Shilpa Shastry","Avinash Chandrashekar","Sujata Sar","Jalaja Muthuraj"],"yetTo":["Kamal Singla","Bharath Krishnamurthy"]}};
+document.getElementById('ts').textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+document.getElementById('gen-time').textContent = 'Generated ' + D.generated;
 
-// ── KPI ───────────────────────────────────────────────────────────
-(function(){
-  const kpis = [
-    {lbl:'Total Participants', val:D.total, sub:'Active mentees', cls:''},
-    {lbl:'Mandatory Avg', val:pct(D.avgMand), sub:D.nMand+' courses', cls:'t'},
-    {lbl:'Optional Avg', val:pct(D.avgOpt), sub:D.nOpt+' courses', cls:'a'},
-    {lbl:'Overall Avg', val:pct(D.avgOverall), sub:'All '+D.nTotal+' courses', cls:'g'},
-    {lbl:'Active Mentors', val:D.nMentors, sub:D.participants.filter(p=>p.overallPct===1).length+' fully done', cls:''},
-  ];
-  document.getElementById('kpi-row').innerHTML = kpis.map(k=>
-    `<div class="kpi ${k.cls}">
-      <div class="kpi-lbl">${k.lbl}</div>
-      <div class="kpi-val">${k.val}</div>
-      <div class="kpi-sub">${k.sub}</div>
-    </div>`
-  ).join('');
-})();
+const C = {
+  gold:'#C8A040',gold2:'#E0B850',teal:'#38A8C8',teal2:'#58C8E8',
+  green:'#30A060',green2:'#48C880',amber:'#D08018',amber2:'#F0A030',
+  red:'#C03838',red2:'#E05050',purple:'#7860C8',purple2:'#9880E8',
+  bg:'#06080E',s0:'#0B1018',s1:'#101820',s2:'#182030',s3:'#20304A',
+  text:'#CCD8E8',tm:'#6080A0',td:'#304050'
+};
 
-// ── MENTOR CARDS ──────────────────────────────────────────────────
-(function(){
-  document.getElementById('mentor-grid').innerHTML = D.mentors.map(m=>{
-    const p = m.avgOverall;
-    const col = p>=1?'var(--green2)':p>=.5?'var(--teal2)':p>0?'var(--amber2)':'var(--td)';
-    const st  = p>=1?'✅ All Complete':p>=.5?'🟡 On Track':p>0?'🟠 In Progress':'⬜ Not Started';
-    return `<div class="mc">
-      <div class="mc-name" title="${m.name}">${m.name}</div>
-      <div class="mc-meta">${m.count} mentees · ${m.mentees.filter((x,i)=>D.participants.find(p2=>p2.name===x&&p2.overallPct===1)).length} done</div>
-      <div class="mc-pct" style="color:${col}">${pct(p)}</div>
-      <div class="mc-bar-bg"><div class="mc-bar-fill" style="width:${(p*100).toFixed(1)}%;background:${col}"></div></div>
-      <div class="mc-status">${st}</div>
+function pct(v){ return Math.round(v*100)+'%'; }
+function pc(v){ return v>=1?C.green2:v>=.5?C.teal2:v>0?C.amber2:C.td; }
+function avg(a){ return a.length?a.reduce((x,y)=>x+y,0)/a.length:0; }
+function pbar(v){
+  const col=pc(v);
+  return `<div class="pr"><div class="pb"><div class="pf" style="width:${(v*100).toFixed(1)}%;background:${col}"></div></div><span class="pt" style="color:${col}">${pct(v)}</span></div>`;
+}
+function bst(ov,ip){
+  if(ov>=1) return '<span class="bd bd-c">✅ Done</span>';
+  if(ov>=.5) return '<span class="bd bd-t">🟡 On Track</span>';
+  if(ip>0)   return '<span class="bd bd-p">🟠 In Progress</span>';
+  return '<span class="bd bd-n">⬜ Not Started</span>';
+}
+function esc(s){ return String(s||'').replace(/"/g,'&quot;'); }
+
+// ── OVERVIEW STRIP ───────────────────────────────────────────────
+const ovItems = [
+  {val: D.qe.nextBatch.length+D.qe.currentBatch.length, lbl:'QE with AI', col:C.teal2, line:C.teal},
+  {val: D.agentic.currentBatch.length+D.agentic.nextBatch.length, lbl:'Agentic AI', col:C.green2, line:C.green},
+  {val: D.polyglot.list.length, lbl:'Polyglot', col:C.amber2, line:C.amber},
+  {val: D.bench.resources.length, lbl:'On Bench', col:C.purple2, line:C.purple},
+  {val: D.committed.confirmed.length, lbl:'Confirmed SPOCs', col:C.gold2, line:C.gold},
+  {val: D.committed.qe.length, lbl:'Total Committed', col:C.red2, line:C.red2},
+];
+document.getElementById('strip').innerHTML = ovItems.map(o =>
+  `<div class="ov"><div class="ov-line" style="background:${o.line}"></div>
+   <div class="ov-val" style="color:${o.col}">${o.val}</div>
+   <div class="ov-lbl">${o.lbl}</div></div>`
+).join('');
+
+// ── SECTIONS ─────────────────────────────────────────────────────
+const sections = [
+  { id:'qe',        icon:'🧠', ico_bg:'rgba(56,168,200,.14)', title:'QE with AI',          sub:'Quality Engineering × AI',     build: buildQE },
+  { id:'agentic',   icon:'🤖', ico_bg:'rgba(48,160,96,.14)',  title:'Agentic AI Native',    sub:'Autonomous AI · Multi-Agent',  build: buildAgentic },
+  { id:'bench',     icon:'📡', ico_bg:'rgba(208,128,24,.14)', title:'Bench Connect',        sub:'Bi-Weekly resource sync',       build: buildBench },
+  { id:'techtalk',  icon:'🎤', ico_bg:'rgba(120,96,200,.14)', title:'Tech Talk',            sub:'Knowledge sharing sessions',    build: buildTechTalk },
+  { id:'polyglot',  icon:'🌐', ico_bg:'rgba(192,56,56,.14)',  title:'Polyglot Challenge',   sub:'Multi-language engineering',    build: buildPolyglot },
+  { id:'committed', icon:'👥', ico_bg:'rgba(200,160,48,.14)', title:'Committed EPAMers',    sub:'All enrolled programme members',build: buildCommitted },
+];
+
+function summaryHTML(id){
+  const qe = D.qe;
+  const ag = D.agentic;
+  if(id==='qe') return `
+    <div class="cstats">
+      <span><span class="cv" style="color:${C.teal2}">${qe.currentBatch.length}</span><span class="cl">current batch</span></span>
+      <span><span class="cv" style="color:${C.gold2}">${qe.nextBatch.length}</span><span class="cl">next batch</span></span>
+      <span><span class="cv" style="color:${C.green2}">${[...new Set(qe.nextBatch.map(p=>p.mentor).filter(Boolean))].length}</span><span class="cl">mentors</span></span>
+    </div>
+    <div class="chips">
+      <span class="chip ch-b">Current: ${qe.currentBatch[0]?.start||'Jun 2026'}</span>
+      <span class="chip ch-g">Next: ${qe.nextBatch[0]?.start||'Jun 2026'}</span>
     </div>`;
-  }).join('');
-})();
+  if(id==='agentic') return `
+    <div class="cstats">
+      <span><span class="cv" style="color:${C.green2}">${ag.currentBatch.length}</span><span class="cl">current batch</span></span>
+      <span><span class="cv" style="color:${C.teal2}">${ag.nextBatch.length}</span><span class="cl">next batch</span></span>
+    </div>
+    <div class="chips">
+      <span class="chip ch-g">Current: ${ag.currentBatch[0]?.start||'Mar 2026'}</span>
+      <span class="chip ch-b">Next: ${ag.nextBatch[0]?.start||'Jun 2026'}</span>
+    </div>`;
+  if(id==='bench') return `
+    <div class="cstats">
+      <span><span class="cv" style="color:${C.amber2}">${D.bench.resources.length}</span><span class="cl">on bench</span></span>
+    </div>
+    <div class="chips">
+      <span class="chip ch-a">${D.bench.config.frequency} · ${D.bench.config.day}</span>
+      <span class="chip ch-b">Next: ${D.bench.config.next}</span>
+    </div>`;
+  if(id==='techtalk') {
+    const t=D.techTalk.talks[0]||{};
+    return `
+    <div class="cstats">
+      <span><span class="cv" style="color:${C.purple2}">${D.techTalk.talks.length}</span><span class="cl">session(s)</span></span>
+      <span><span class="cv" style="color:${C.gold2};font-size:14px">${t.date||'Jun 2026'}</span></span>
+    </div>
+    <div class="chips">
+      <span class="chip ch-p">${t.status||'Upcoming'}</span>
+      <span class="chip ch-b">Speaker: ${t.speaker||'TBD'}</span>
+    </div>`;
+  }
+  if(id==='polyglot') return `
+    <div class="cstats">
+      <span><span class="cv" style="color:${C.red2}">${D.polyglot.list.length}</span><span class="cl">participants</span></span>
+    </div>
+    <div class="chips">
+      <span class="chip ch-r">L4+ selected</span>
+      <span class="chip ch-a">Coord: Lavanya R</span>
+    </div>`;
+  if(id==='committed') return `
+    <div class="cstats">
+      <span><span class="cv" style="color:${C.gold2}">${D.committed.qe.length}</span><span class="cl">QE committed</span></span>
+      <span><span class="cv" style="color:${C.teal2}">${D.committed.confirmed.length}</span><span class="cl">SPOCs confirmed</span></span>
+    </div>
+    <div class="chips">
+      ${Object.entries(D.committed.grades).sort((a,b)=>a[0].localeCompare(b[0])).map(([g,c])=>
+        `<span class="chip ch-b">${g}: ${c}</span>`).join('')}
+    </div>`;
+  return '';
+}
 
-// ── TABLE ─────────────────────────────────────────────────────────
-let sortKey='overallPct', sortAsc=false;
-const mSel = document.getElementById('fmtr');
-[...new Set(D.participants.map(p=>p.mentor))].sort().forEach(m=>{
-  const o=document.createElement('option'); o.value=m; o.textContent=m; mSel.appendChild(o);
-});
+// Render section grid
+const built = {};
+document.getElementById('grid').innerHTML = sections.map(s =>
+  `<div class="card" id="card-${s.id}">
+    <div class="chead" onclick="toggle('${s.id}')">
+      <div class="cico" style="background:${s.ico_bg}">${s.icon}</div>
+      <div class="cinfo">
+        <div class="ctop"><span class="ctitle">${s.title}</span><span class="carrow">▼</span></div>
+        <div class="csub">${s.sub}</div>
+        ${summaryHTML(s.id)}
+      </div>
+    </div>
+    <div class="drill" id="drill-${s.id}"><div class="di" id="di-${s.id}"></div></div>
+  </div>`
+).join('');
 
-function filterTable(){
-  const q = document.getElementById('srch').value.toLowerCase();
-  const m = document.getElementById('fmtr').value;
-  const s = document.getElementById('fsts').value;
-  const rows = document.querySelectorAll('#tbody tr.data-row');
-  let vis=0;
-  rows.forEach(r=>{
-    const n=r.dataset.name,mt=r.dataset.mentor,ov=parseFloat(r.dataset.ov),ip=parseInt(r.dataset.ip);
-    let show=true;
-    if(q&&!n.toLowerCase().includes(q))show=false;
-    if(m&&mt!==m)show=false;
-    if(s==='done'&&ov<1)show=false;
-    if(s==='on'&&(ov<.5||ov>=1))show=false;
-    if(s==='prog'&&(ip===0||ov>=1))show=false;
-    if(s==='none'&&(ov>0||ip>0))show=false;
-    r.style.display=show?'':'none';
-    const det=document.getElementById('det-'+r.dataset.idx);
-    if(det)det.style.display='none';
-    if(show)vis++;
+function toggle(id) {
+  const card  = document.getElementById('card-'+id);
+  const drill = document.getElementById('drill-'+id);
+  const isOpen = drill.classList.contains('show');
+  document.querySelectorAll('.drill.show').forEach(d=>d.classList.remove('show'));
+  document.querySelectorAll('.card.open').forEach(c=>c.classList.remove('open'));
+  if(!isOpen){
+    drill.classList.add('show'); card.classList.add('open');
+    if(!built[id]){ sections.find(s=>s.id===id).build(); built[id]=true; }
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'start'}),80);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// DRILL-DOWN BUILDERS
+// ═══════════════════════════════════════════════════════
+
+// ── 1. QE WITH AI ──────────────────────────────────────────────────
+let qSk='overallPct', qSa=false;
+function buildQE(){
+  const el = document.getElementById('di-qe');
+  const qe = D.qe;
+  const mentors = [...new Set(qe.participants.map(p=>p.mentor))].sort();
+
+  // --- Summary bars ---
+  const mentorAvgs = mentors.map(m=>{
+    const g=qe.participants.filter(p=>p.mentor===m);
+    return {name:m,count:g.length,avg:avg(g.map(p=>p.overallPct)),mand:avg(g.map(p=>p.mandPct))};
   });
-  document.getElementById('tbl-count').textContent=`Showing ${vis} of ${D.participants.length} participants`;
-}
 
-function sort(key){
-  if(sortKey===key)sortAsc=!sortAsc; else{sortKey=key;sortAsc=(key==='name'||key==='mentor');}
-  renderTable();
-}
+  el.innerHTML = `
+  <!-- Batch info row -->
+  <div class="g2" style="margin-bottom:14px">
+    <div class="bsec">
+      <div class="bsec-title" style="color:${C.teal2}">🎓 Current Batch &nbsp;<span class="chip ch-b">${qe.currentBatch.length} participants</span></div>
+      <div class="tw" style="max-height:220px">
+        <table><thead><tr><th>#</th><th>Name</th><th>Mentor</th><th>Start</th></tr></thead>
+        <tbody>${qe.currentBatch.map((p,i)=>`<tr>
+          <td style="color:${C.td}">${i+1}</td>
+          <td><strong>${p.name}</strong></td>
+          <td style="color:${C.tm}">${p.mentor}</td>
+          <td style="color:${C.td}">${p.start}</td></tr>`).join('')}
+        </tbody></table>
+      </div>
+    </div>
+    <div class="bsec">
+      <div class="bsec-title" style="color:${C.gold2}">📋 Next Batch &nbsp;<span class="chip ch-g">${qe.nextBatch.length} participants · ${[...new Set(qe.nextBatch.map(p=>p.mentor).filter(Boolean))].length} mentors</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;max-height:180px;overflow-y:auto">
+        ${mentors.map(m=>{
+          const cnt=qe.nextBatch.filter(p=>p.mentor===m).length;
+          return `<div style="background:${C.s1};border:1px solid ${C.s2};border-radius:4px;padding:5px 9px;font-size:11px">
+            <span style="color:${C.text};font-weight:500">${m}</span>
+            <span style="color:${C.teal2};font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin-left:6px">${cnt}</span>
+            <span style="color:${C.td};font-size:10px"> mentees</span></div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+  <!-- Charts -->
+  <div class="g2" style="margin-bottom:14px">
+    <div class="cbox">
+      <div class="ctitleb">Completion % per Participant</div>
+      <div style="position:relative;height:260px"><canvas id="cq-bar" aria-label="Participant completion bar chart"></canvas></div>
+    </div>
+    <div class="cbox">
+      <div class="ctitleb">Mentor Cohort — Avg %</div>
+      <div style="position:relative;height:260px"><canvas id="cq-ment" aria-label="Mentor cohort chart"></canvas></div>
+    </div>
+  </div>
+  <!-- Tracker table -->
+  <div class="tbar">
+    <span class="tlbl">Course Completion Tracker — ${qe.participants.length} participants</span>
+    <input class="ctrl" id="qsr" placeholder="Search name…" oninput="RQ()" style="width:150px"/>
+    <select class="ctrl" id="qmf" onchange="RQ()"><option value="">All Mentors</option>${mentors.map(m=>`<option value="${esc(m)}">${m}</option>`).join('')}</select>
+    <select class="ctrl" id="qsf" onchange="RQ()">
+      <option value="">All Progress</option>
+      <option value="done">Completed (100%)</option>
+      <option value="on">On Track (≥50%)</option>
+      <option value="prog">In Progress</option>
+      <option value="none">Not Started</option>
+    </select>
+    <button class="ctrl" onclick="EQ()">↓ Export CSV</button>
+  </div>
+  <div class="tw">
+    <table><thead><tr>
+      <th style="width:32px">#</th>
+      <th onclick="SQ('name')">Name ↕</th>
+      <th onclick="SQ('mentor')">Mentor ↕</th>
+      <th class="r" onclick="SQ('mandPct')">Mandatory ↕</th>
+      <th class="r" onclick="SQ('optPct')">Optional ↕</th>
+      <th class="r" onclick="SQ('overallPct')">Overall ↕</th>
+      <th>Status</th>
+    </tr></thead>
+    <tbody id="qtb"></tbody></table>
+  </div>
+  <div class="tfooter" id="qfc"></div>`;
 
-function renderTable(){
-  const sorted=[...D.participants].sort((a,b)=>{
-    let va=a[sortKey],vb=b[sortKey];
+  RQ();
+
+  // Bar chart
+  const sp=[...D.qe.participants].sort((a,b)=>a.overallPct-b.overallPct);
+  new Chart(document.getElementById('cq-bar'),{type:'bar',
+    data:{labels:sp.map(p=>p.name),
+      datasets:[{data:sp.map(p=>+(p.overallPct*100).toFixed(1)),
+        backgroundColor:sp.map(p=>pc(p.overallPct)+'BB'),borderWidth:0,borderRadius:2}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x}% — ${sp[c.dataIndex].mandDone||0}/11 mandatory`}}},
+      scales:{x:{min:0,max:100,ticks:{color:C.tm,font:{size:9},callback:v=>v+'%'},grid:{color:C.s2}},
+              y:{ticks:{color:C.text,font:{size:9}},grid:{display:false}}}}});
+
+  new Chart(document.getElementById('cq-ment'),{type:'bar',
+    data:{labels:mentorAvgs.map(m=>m.name),
+      datasets:[
+        {label:'Mand %',data:mentorAvgs.map(m=>+(m.mand*100).toFixed(1)),backgroundColor:C.teal+'BB',borderRadius:2},
+        {label:'Overall %',data:mentorAvgs.map(m=>+(m.avg*100).toFixed(1)),backgroundColor:C.green+'99',borderRadius:2},
+      ]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{color:C.tm,font:{size:9}}}},
+      scales:{x:{min:0,max:100,ticks:{color:C.tm,font:{size:9},callback:v=>v+'%'},grid:{color:C.s2}},
+              y:{ticks:{color:C.text,font:{size:9}},grid:{display:false}}}}});
+}
+function RQ(){
+  const q=(document.getElementById('qsr')||{}).value||'';
+  const m=(document.getElementById('qmf')||{}).value||'';
+  const st=(document.getElementById('qsf')||{}).value||'';
+  const s=[...D.qe.participants].sort((a,b)=>{
+    let va=a[qSk],vb=b[qSk];
     if(typeof va==='string'){va=va.toLowerCase();vb=vb.toLowerCase();}
-    return sortAsc?(va>vb?1:va<vb?-1:0):(va<vb?1:va>vb?-1:0);
+    return qSa?(va>vb?1:-1):(va<vb?1:-1);
   });
-  const rows = sorted.map((p,i)=>{
-    const mc=pctColor(p.mandPct), oc=pctColor(p.optPct), ac=pctColor(p.overallPct);
+  let vis=0;
+  document.getElementById('qtb').innerHTML=s.map((p,i)=>{
     const ip=p.mandProg+p.optProg;
-    const badge = p.overallPct>=1?'<span class="badge b-done">✅ Completed</span>':
-      p.overallPct>=.5?'<span class="badge b-on">🟡 On Track</span>':
-      ip>0?'<span class="badge b-prog">🟠 In Progress</span>':
-      '<span class="badge b-none">⬜ Not Started</span>';
-    const allCourses=[
-      ...p.mandStatuses.map((s,j)=>({n:D.mandCourses[j],s})),
-      ...p.optStatuses.map((s,j) =>({n:D.optCourses[j], s}))
-    ];
-    const detHtml=allCourses.map(c=>{
-      const col=c.s==='Completed'?'var(--green2)':c.s==='In-Progress'?'var(--amber2)':'var(--td)';
-      const ico=c.s==='Completed'?'●':c.s==='In-Progress'?'◑':'○';
-      return`<div class="course-item"><span class="ci-dot" style="background:${col}"></span><span style="flex:1">${c.n}</span><span style="color:${col};font-size:10px">${c.s}</span></div>`;
-    }).join('');
-    return `<tr class="data-row" data-idx="${i}" data-name="${p.name.toLowerCase()}" data-mentor="${p.mentor}" data-ov="${p.overallPct}" data-ip="${ip}">
-      <td style="color:var(--td)">${i+1}</td>
+    const ok=(!q||p.name.toLowerCase().includes(q.toLowerCase()))&&(!m||p.mentor===m)&&
+      (st===''||(st==='done'&&p.overallPct>=1)||(st==='on'&&p.overallPct>=.5&&p.overallPct<1)||
+       (st==='prog'&&ip>0&&p.overallPct<1)||(st==='none'&&p.overallPct===0&&ip===0));
+    if(ok)vis++;
+    return `<tr style="${ok?'':'display:none'}">
+      <td style="color:${C.td}">${i+1}</td>
       <td><strong>${p.name}</strong></td>
-      <td style="color:var(--tm);font-size:12px">${p.mentor}</td>
-      <td class="right">${progCell(p.mandPct,mc,p.mandDone+'/'+D.nMand)}</td>
-      <td class="right">${progCell(p.optPct,oc,p.optDone+'/'+D.nOpt)}</td>
-      <td class="right">${progCell(p.overallPct,ac,(p.mandDone+p.optDone)+'/'+D.nTotal)}</td>
-      <td>${badge}</td>
-      <td style="text-align:center"><button onclick="toggleDetail(${i})" style="background:none;border:1px solid var(--s2);color:var(--tm);border-radius:3px;padding:2px 8px;cursor:pointer;font-size:11px">▸</button></td>
-    </tr>
-    <tr class="detail-row" id="det-${i}" style="display:none">
-      <td colspan="8"><div style="font-size:11px;font-weight:500;color:var(--tm);margin-bottom:8px">Course completion for ${p.name}</div>
-      <div class="course-grid">${detHtml}</div></td>
-    </tr>`;
+      <td style="color:${C.tm};font-size:11px">${p.mentor}</td>
+      <td class="r">${pbar(p.mandPct)}</td>
+      <td class="r">${pbar(p.optPct)}</td>
+      <td class="r">${pbar(p.overallPct)}</td>
+      <td>${bst(p.overallPct,ip)}</td></tr>`;
   }).join('');
-  document.getElementById('tbody').innerHTML=rows;
-  document.getElementById('tbl-count').textContent=`Showing ${sorted.length} of ${D.participants.length} participants`;
+  document.getElementById('qfc').textContent=`Showing ${vis} of ${D.qe.participants.length} participants`;
 }
-renderTable();
-
-function toggleDetail(idx){
-  const r=document.getElementById('det-'+idx);
-  r.style.display=r.style.display==='none'?'':'none';
-}
-
-// ── CHARTS ────────────────────────────────────────────────────────
-const GOLD='#C8A030', TEAL='#2A8A9A', TEAL2='#3ABACF', GREEN='#3ACA80',
-      AMBER='#F0A020', PANEL='#0C1220', BORDER='#1A2840', TM='#7A94AA';
-
-const sorted=[...D.participants].sort((a,b)=>a.overallPct-b.overallPct);
-new Chart(document.getElementById('c1'),{
-  type:'bar',
-  data:{
-    labels:sorted.map(p=>p.name),
-    datasets:[{
-      data:sorted.map(p=>+(p.overallPct*100).toFixed(1)),
-      backgroundColor:sorted.map(p=>p.overallPct>=1?GREEN:p.overallPct>=.5?TEAL2:p.overallPct>0?AMBER:BORDER),
-      borderWidth:0,borderRadius:3
-    }]
-  },
-  options:{
-    indexAxis:'y',responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x}% — ${sorted[c.dataIndex].mandDone}/${D.nMand} mandatory`}}},
-    scales:{
-      x:{min:0,max:100,ticks:{color:TM,font:{size:10},callback:v=>v+'%'},grid:{color:BORDER}},
-      y:{ticks:{color:'#D8E4EE',font:{size:10,family:'DM Sans'}},grid:{display:false}}
-    }
-  }
-});
-
-document.getElementById('donut-legend').innerHTML=[
-  [TEAL2,'Mandatory',pct(D.avgMand)],
-  [AMBER,'Optional',pct(D.avgOpt)],
-  [GREEN,'Overall',pct(D.avgOverall)]
-].map(([c,l,v])=>`<span style="display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;border-radius:2px;background:${c}"></span>${l}: <strong style="color:${c}">${v}</strong></span>`).join('');
-
-new Chart(document.getElementById('c2'),{
-  type:'doughnut',
-  data:{
-    labels:['Mandatory','Optional','Overall'],
-    datasets:[{
-      data:[+(D.avgMand*100).toFixed(1),+(D.avgOpt*100).toFixed(1),+(D.avgOverall*100).toFixed(1)],
-      backgroundColor:[TEAL2,AMBER,GREEN],
-      borderColor:PANEL,borderWidth:4
-    }]
-  },
-  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed.toFixed(1)}%`}}}}
-});
-
-const mNames=D.mentors.map(m=>m.name);
-new Chart(document.getElementById('c3'),{
-  type:'bar',
-  data:{
-    labels:mNames,
-    datasets:[
-      {label:'Mandatory %', data:D.mentors.map(m=>+(m.avgMandPct*100).toFixed(1)),backgroundColor:TEAL2,borderRadius:3},
-      {label:'Optional %',  data:D.mentors.map(m=>+(m.avgOptPct*100).toFixed(1)), backgroundColor:AMBER, borderRadius:3},
-      {label:'Overall %',   data:D.mentors.map(m=>+(m.avgOverall*100).toFixed(1)),backgroundColor:GREEN+'99',borderRadius:3}
-    ]
-  },
-  options:{
-    indexAxis:'y',responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top',labels:{color:TM,font:{size:10},boxWidth:10}}},
-    scales:{
-      x:{min:0,max:100,ticks:{color:TM,font:{size:10},callback:v=>v+'%'},grid:{color:BORDER}},
-      y:{ticks:{color:'#D8E4EE',font:{size:10}},grid:{display:false}}
-    }
-  }
-});
-
-const N=D.nTotal;
-new Chart(document.getElementById('c4'),{
-  type:'bar',
-  data:{
-    labels:mNames,
-    datasets:[
-      {label:'Completed',   data:D.mentors.map(m=>{const g=D.participants.filter(p=>p.mentor===m.name);return g.reduce((a,p)=>a+p.mandDone+p.optDone,0);}),   backgroundColor:GREEN+'CC',borderRadius:3},
-      {label:'In-Progress', data:D.mentors.map(m=>{const g=D.participants.filter(p=>p.mentor===m.name);return g.reduce((a,p)=>a+p.mandProg+p.optProg,0);}),  backgroundColor:AMBER+'CC',borderRadius:3},
-      {label:'Not Started', data:D.mentors.map(m=>{const g=D.participants.filter(p=>p.mentor===m.name);return g.reduce((a,p)=>a+N-p.mandDone-p.optDone-p.mandProg-p.optProg,0);}),backgroundColor:BORDER,borderRadius:3}
-    ]
-  },
-  options:{
-    indexAxis:'y',responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'top',labels:{color:TM,font:{size:10},boxWidth:10}}},
-    scales:{
-      x:{stacked:true,ticks:{color:TM,font:{size:10}},grid:{color:BORDER}},
-      y:{stacked:true,ticks:{color:'#D8E4EE',font:{size:10}},grid:{display:false}}
-    }
-  }
-});
-
-// ── CSV EXPORT ────────────────────────────────────────────────────
-function exportCSV(){
+function SQ(k){if(qSk===k)qSa=!qSa;else{qSk=k;qSa=(k==='name'||k==='mentor');}RQ();}
+function EQ(){
   const rows=[['Name','Mentor','Mand Done','Mand %','Opt Done','Opt %','Overall %','Status']];
-  D.participants.forEach(p=>{
+  D.qe.participants.forEach(p=>{
     const st=p.overallPct>=1?'Completed':p.overallPct>=.5?'On Track':(p.mandProg+p.optProg)>0?'In Progress':'Not Started';
     rows.push([p.name,p.mentor,p.mandDone,pct(p.mandPct),p.optDone,pct(p.optPct),pct(p.overallPct),st]);
   });
   const csv=rows.map(r=>r.map(v=>'"'+v+'"').join(',')).join('\n');
-  const a=document.createElement('a'); a.href='data:text/csv,'+encodeURIComponent(csv);
-  a.download='QE_Dashboard_Export.csv'; a.click();
+  const a=document.createElement('a');a.href='data:text/csv,'+encodeURIComponent(csv);
+  a.download='QE_AI_Tracker.csv';a.click();
 }
 
-// ── HELPERS ───────────────────────────────────────────────────────
-function pct(v){return Math.round(v*100)+'%';}
-function pctColor(v){return v>=1?'var(--green2)':v>=.5?'var(--teal2)':v>0?'var(--amber2)':'var(--td)';}
-function progCell(v,col,lbl){
-  return`<div class="prog"><div class="prog-bg"><div class="prog-fill" style="width:${(v*100).toFixed(1)}%;background:${col}"></div></div><span class="prog-lbl" style="color:${col}">${pct(v)}</span></div>`;
+// ── 2. AGENTIC AI NATIVE ───────────────────────────────────────────────
+function buildAgentic(){
+  const el=document.getElementById('di-agentic');
+  const ag=D.agentic;
+  const lvlColors=[C.teal2,C.amber2,C.red2];
+  const lvlTags=['cit-i','cit-a','cit-e'];
+
+  const comp=ag.currentBatch.filter(p=>p.status==='Completed').length;
+  const inprog=ag.currentBatch.filter(p=>p.status==='In-Progress').length;
+
+  el.innerHTML=`
+  <div class="g2" style="margin-bottom:14px">
+    <div>
+      <div class="bsec">
+        <div class="bsec-title" style="color:${C.green2}">🔄 Current Batch &nbsp;
+          <span class="chip ch-g">${ag.currentBatch.length} participants</span>
+          <span class="chip ch-b">Started ${ag.currentBatch[0]?.start||'Mar 2026'}</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:10px;font-size:11px">
+          <div style="background:${C.s1};border:1px solid ${C.s2};border-radius:4px;padding:7px 12px">
+            <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:600;color:${C.green2}">${comp}</div>
+            <div style="color:${C.td};font-size:10px">Completed</div>
+          </div>
+          <div style="background:${C.s1};border:1px solid ${C.s2};border-radius:4px;padding:7px 12px">
+            <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:600;color:${C.amber2}">${inprog}</div>
+            <div style="color:${C.td};font-size:10px">In Progress</div>
+          </div>
+        </div>
+        <div class="tw" style="max-height:200px">
+          <table><thead><tr><th>#</th><th>Name</th><th>Mentor</th><th>Start</th><th>Status</th></tr></thead>
+          <tbody>${ag.currentBatch.map((p,i)=>`<tr>
+            <td style="color:${C.td}">${i+1}</td><td><strong>${p.name}</strong></td>
+            <td style="color:${C.tm}">${p.mentor}</td><td style="color:${C.td}">${p.start}</td>
+            <td>${p.status==='Completed'?'<span class="bd bd-c">✅ Completed</span>':'<span class="bd bd-p">🟠 In Progress</span>'}</td>
+          </tr>`).join('')}</tbody></table>
+        </div>
+      </div>
+      <div class="bsec" style="margin-top:10px">
+        <div class="bsec-title" style="color:${C.teal2}">🚀 Next Batch &nbsp;
+          <span class="chip ch-b">${ag.nextBatch.length} participants</span>
+          <span class="chip ch-g">Starting ${ag.nextBatch[0]?.start||'Jun 2026'}</span>
+        </div>
+        <div class="tw" style="max-height:200px">
+          <table><thead><tr><th>#</th><th>Name</th><th>Mentor</th><th>Start</th></tr></thead>
+          <tbody>${ag.nextBatch.map((p,i)=>`<tr>
+            <td style="color:${C.td}">${i+1}</td><td><strong>${p.name}</strong></td>
+            <td style="color:${C.tm}">${p.mentor}</td><td style="color:${C.td}">${p.start}</td>
+          </tr>`).join('')}</tbody></table>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:500;color:${C.text};margin-bottom:10px;letter-spacing:.04em">📚 Course Structure</div>
+      ${Object.entries(ag.courses).map(([lvl,list],li)=>`
+        <div class="csec">
+          <div class="csec-lbl" style="color:${lvlColors[li]}">${lvl} Level</div>
+          <div class="cgrid">${list.map((c,j)=>`
+            <div class="ci"><span class="cinum">${String(j+1).padStart(2,'0')}</span>
+            <span>${c}</span>
+            <span class="citag ${lvlTags[li]}">${lvl.slice(0,3)}</span></div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ── 3. BENCH CONNECT ─────────────────────────────────────────────────
+function buildBench(){
+  const el=document.getElementById('di-bench');
+  const r=D.bench.resources, cfg=D.bench.config;
+  const lvls=[...new Set(r.map(x=>x.level))].sort();
+  el.innerHTML=`
+  <div class="g2">
+    <div>
+      <div class="sitem">
+        <div class="sdate">📅 ${cfg.frequency} Connect</div>
+        <div class="smeta">
+          Recurring every other <strong style="color:${C.text}">${cfg.day}</strong><br>
+          Next session: <strong style="color:${C.amber2}">${cfg.next}</strong><br>
+          ${cfg.notes}
+        </div>
+      </div>
+      <div class="cbox" style="margin-top:10px">
+        <div class="ctitleb">Level Breakdown — ${r.length} on bench</div>
+        ${lvls.map(l=>{const cnt=r.filter(x=>x.level===l).length;return `
+          <div class="lvbar">
+            <span class="lvname">${l}</span>
+            <div class="lvbg"><div class="lvfill" style="width:${(cnt/r.length*100).toFixed(0)}%;background:${C.amber}"></div></div>
+            <span class="lvn" style="color:${C.amber2}">${cnt}</span>
+          </div>`;}).join('')}
+      </div>
+    </div>
+    <div>
+      <div class="tbar">
+        <span class="tlbl">Bench Resources (${r.length})</span>
+        <input class="ctrl" placeholder="Search…" oninput="FB(this.value)" style="width:140px"/>
+      </div>
+      <div class="tw" style="max-height:420px">
+        <table><thead><tr><th>#</th><th>Name</th><th>Level</th><th>Primary Skill</th></tr></thead>
+        <tbody id="bntb">${r.map((x,i)=>`<tr>
+          <td style="color:${C.td}">${i+1}</td>
+          <td><strong>${x.name}</strong></td>
+          <td><span class="bd bd-t">${x.level}</span></td>
+          <td style="color:${C.tm}">${x.skill}</td></tr>`).join('')}
+        </tbody></table>
+      </div>
+    </div>
+  </div>`;
+}
+function FB(q){document.querySelectorAll('#bntb tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});}
+
+// ── 4. TECH TALK ──────────────────────────────────────────────────────
+function buildTechTalk(){
+  const el=document.getElementById('di-techtalk');
+  el.innerHTML=`
+  <div style="max-width:600px">
+    <div class="tbar"><span class="tlbl">Scheduled Sessions (${D.techTalk.talks.length})</span></div>
+    ${D.techTalk.talks.map(t=>`
+      <div class="sitem" style="border-left-color:${C.purple}">
+        <div class="sdate" style="color:${C.purple2}">🎤 ${t.date}</div>
+        <div style="display:flex;gap:6px;margin:6px 0">
+          <span class="chip ch-p">${t.status}</span>
+        </div>
+        <div class="smeta">
+          Speaker: <strong style="color:${C.text}">${t.speaker}</strong><br>
+          Topic: <strong style="color:${C.gold2}">${t.topic}</strong>
+        </div>
+      </div>`).join('')}
+    <div style="background:${C.s1};border:1px solid ${C.s2};border-radius:5px;padding:11px 14px;margin-top:10px;font-size:11px;color:${C.td}">
+      📝 To update speaker / topic: edit <code style="color:${C.gold}">TECH_TALKS</code> at the top of <code style="color:${C.gold}">generate_dashboard.py</code> and re-run the script.
+    </div>
+  </div>`;
+}
+
+// ── 5. POLYGLOT ───────────────────────────────────────────────────────
+function buildPolyglot(){
+  const el=document.getElementById('di-polyglot');
+  const p=D.polyglot.list;
+  const cols=[C.gold2,C.teal2,C.green2,C.purple2,C.amber2,C.red2];
+  el.innerHTML=`
+  <div class="g2">
+    <div>
+      <div class="tbar"><span class="tlbl">Participants (${p.length})</span></div>
+      <div class="tw">
+        <table><thead><tr><th>#</th><th>Name</th></tr></thead>
+        <tbody>${p.map((x,i)=>`<tr>
+          <td><span style="font-family:'Syne';font-weight:700;font-size:14px;color:${cols[i%cols.length]}">${i+1}</span></td>
+          <td><strong>${x.name}</strong></td></tr>`).join('')}
+        </tbody></table>
+      </div>
+    </div>
+    <div class="cbox">
+      <div class="ctitleb">About the Challenge</div>
+      <div style="font-size:12px;color:${C.tm};line-height:2">
+        <div>🎯 <strong style="color:${C.text}">Goal:</strong> Multi-language engineering mastery</div>
+        <div>👥 <strong style="color:${C.text}">Selection:</strong> L4+ top performers</div>
+        <div>🗓️ <strong style="color:${C.text}">Started:</strong> ${p.length?'Jun 2026':'TBD'}</div>
+        <div>📚 <strong style="color:${C.text}">Languages:</strong> Python · JavaScript · Java · Go</div>
+        <div style="margin-top:10px;padding:8px 11px;background:${C.s1};border-radius:4px;border-left:2px solid ${C.red2};font-size:11px;color:${C.td}">
+          Programme Coordinator: <strong style="color:${C.text}">Lavanya R</strong>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── 6. COMMITTED EPAMERS ──────────────────────────────────────────────
+let cSk='name', cSa=true;
+function buildCommitted(){
+  const el=document.getElementById('di-committed');
+  const qe=D.committed.qe, gd=D.committed.grades;
+  const spocs=D.committed.spocs.filter(s=>s.program==='QE in AI');
+  const mentors=[...new Set(qe.map(x=>x.mentor).filter(Boolean))].sort();
+  const levels=[...new Set(qe.map(x=>x.level).filter(Boolean))].sort();
+
+  el.innerHTML=`
+  <div class="g2" style="margin-bottom:14px">
+    <div>
+      <div class="tbar">
+        <span class="tlbl">All Committed EPAMers — QE with AI (${qe.length})</span>
+        <input class="ctrl" id="csr" placeholder="Search name…" oninput="RC()" style="width:140px"/>
+        <select class="ctrl" id="cmf" onchange="RC()"><option value="">All Mentors</option>${mentors.map(m=>`<option value="${esc(m)}">${m}</option>`).join('')}</select>
+        <select class="ctrl" id="clf" onchange="RC()"><option value="">All Levels</option>${levels.map(l=>`<option value="${l}">${l}</option>`).join('')}</select>
+        <button class="ctrl" onclick="EC()">↓ CSV</button>
+      </div>
+      <div class="tw" style="max-height:380px">
+        <table><thead><tr>
+          <th>#</th>
+          <th onclick="SC('name')">Name ↕</th>
+          <th onclick="SC('level')">Level ↕</th>
+          <th onclick="SC('mentor')">Mentor ↕</th>
+          <th>Start</th>
+        </tr></thead>
+        <tbody id="ctb"></tbody></table>
+      </div>
+      <div class="tfooter" id="cfc"></div>
+    </div>
+    <div>
+      <div class="cbox" style="margin-bottom:10px">
+        <div class="ctitleb">Grade Distribution — ${Object.values(gd).reduce((a,b)=>a+b,0)} Total</div>
+        <div style="position:relative;height:140px"><canvas id="c-grade" aria-label="Grade distribution"></canvas></div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px">
+          ${Object.entries(gd).sort((a,b)=>a[0].localeCompare(b[0])).map(([g,c])=>
+            `<div class="gpill"><span class="gnum">${c}</span><span class="glbl">${g}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="cbox">
+        <div class="ctitleb">SPOC Distribution (${spocs.length} SPOCs)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:200px;overflow-y:auto">
+          ${spocs.map(s=>`<div class="spcard">
+            <div class="spname">${s.name}</div>
+            <div style="font-size:10px;color:${C.td}">${s.program}</div>
+            <div class="spnum">${s.total}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="tbar"><span class="tlbl">SPOCs — Confirmed (${D.committed.confirmed.length}) &amp; Yet to Confirm (${D.committed.yetTo.length})</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+    ${D.committed.confirmed.map(n=>`<span class="chip ch-g">✅ ${n}</span>`).join('')}
+    ${D.committed.yetTo.map(n=>`<span class="chip ch-a">⏳ ${n}</span>`).join('')}
+  </div>`;
+
+  RC();
+
+  const keys=Object.keys(gd).sort();
+  new Chart(document.getElementById('c-grade'),{type:'bar',
+    data:{labels:keys,datasets:[{data:keys.map(k=>gd[k]),
+      backgroundColor:[C.teal,C.amber,C.green,C.gold,C.purple,C.red],borderRadius:4,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:C.tm,font:{size:10}},grid:{display:false}},
+              y:{ticks:{color:C.tm,font:{size:10}},grid:{color:C.s2}}}}});
+}
+function RC(){
+  const q=(document.getElementById('csr')||{}).value||'';
+  const m=(document.getElementById('cmf')||{}).value||'';
+  const l=(document.getElementById('clf')||{}).value||'';
+  const s=[...D.committed.qe].sort((a,b)=>{
+    let va=a[cSk]||'',vb=b[cSk]||'';
+    return cSa?va.localeCompare(vb):vb.localeCompare(va);
+  });
+  let vis=0;
+  document.getElementById('ctb').innerHTML=s.map((x,i)=>{
+    const ok=(!q||x.name.toLowerCase().includes(q.toLowerCase()))&&(!m||x.mentor===m)&&(!l||x.level===l);
+    if(ok)vis++;
+    return `<tr style="${ok?'':'display:none'}">
+      <td style="color:${C.td}">${i+1}</td>
+      <td><strong>${x.name}</strong></td>
+      <td><span class="bd bd-t">${x.level}</span></td>
+      <td style="color:${C.tm};font-size:11px">${x.mentor}</td>
+      <td style="color:${C.td}">${x.start}</td></tr>`;
+  }).join('');
+  document.getElementById('cfc').textContent=`Showing ${vis} of ${D.committed.qe.length} EPAMers`;
+}
+function SC(k){if(cSk===k)cSa=!cSa;else{cSk=k;cSa=true;}RC();}
+function EC(){
+  const rows=[['Name','Level','Mentor','Start Date']];
+  D.committed.qe.forEach(x=>rows.push([x.name,x.level,x.mentor,x.start]));
+  const csv=rows.map(r=>r.map(v=>'"'+v+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv,'+encodeURIComponent(csv);a.download='Committed_EPAMers.csv';a.click();
 }
 </script>
-</body>
-</html>
+</body></html>
